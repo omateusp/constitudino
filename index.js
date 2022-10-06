@@ -638,7 +638,7 @@ function loadFile(filePath) {
             this.updatePending = false;
             // TODO: distancemeter %100 >> i open question
             //document.ADDelements.createElement("div", this);
-            if(this.distanceRan >= 1000*this.questionsN)
+            if(this.distanceRan >= 4000*this.questionsN)
             {
                 this.questionsN++;
                 // Get the modal
