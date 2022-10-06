@@ -39,6 +39,8 @@
 
         this.time = 0;
         this.runningTime = 0;
+        this.questionsN = 1;
+        this.perguntando = false;
         this.msPerFrame = 1000 / FPS;
         this.currentSpeed = this.config.SPEED;
 
@@ -350,7 +352,7 @@
         /**
          * Game initialiser.
          */
-        init: function () {
+        init: async function () {
             // Hide the static icon.
             document.querySelector('.' + Runner.classes.ICON).style.visibility =
                 'hidden';
@@ -388,7 +390,7 @@
             }
 
             this.startListening();
-            this.update();
+            await this.update();
 
             window.addEventListener(Runner.events.RESIZE,
                 this.debounceResize.bind(this));
@@ -508,6 +510,8 @@
             this.tRex.playingIntro = false;
             this.containerEl.style.webkitAnimation = '';
             this.playCount++;
+            this.questionsN = 1;
+            this.perguntando = false;
 
             // Handle tabbing off the page. Pause the current game.
             document.addEventListener(Runner.events.VISIBILITY,
@@ -525,12 +529,83 @@
                 this.dimensions.HEIGHT);
         },
 
+        criarPergunta: function() {
+            var pergunta = document.createElement('div')
+            //we new a class name to use GitHub default Css style
+            pergunta.className = 'pergunta'
+        
+            pergunta.innerHTML =  `
+            <h1 style="text-align: center;font-family: 'Open Sans', sans-serif;">A Constituição de 1824 foi a primeira constituição do Brasil?</h1>
+                `
+        
+            return pergunta
+        },
+        waitingKeypress: function () {
+            return new Promise((resolve) => {
+              document.addEventListener('keydown', onKeyHandler);
+              function onKeyHandler(e) {
+                console.log(e.keyCode)
+                if (e.keyCode === 86 || e.keyCode === 70) {
+                    // if(true){
+                  document.removeEventListener('keydown', onKeyHandler);
+                  resolve();
+                  this.nextLevel();
+                }
+              }
+            });
+        },
+
+        nextLevel: async function(){
+            if (!this.raqId) {
+                // this.questionsN = 1;
+                // this.playCount++;
+                this.runningTime = 0;
+                this.playing = true;
+                this.perguntando = false;
+                // this.crashed = false;
+                // this.distanceRan = 0;
+                // this.setSpeed(this.config.SPEED);
+                this.time = getTimeStamp();
+                // this.containerEl.classList.remove(Runner.classes.CRASHED);
+                this.clearCanvas();
+                // this.distanceMeter.reset(this.highestScore);
+                this.horizon.reset();
+                this.tRex.reset();
+                this.playSound(this.soundFx.BUTTON_PRESS);
+                this.invert(true);
+                await this.update();
+            }
+        },
+
+
         /**
          * Update the game frame and schedules the next one.
          */
-        update: function () {
+        update: async function () {
+            console.log(this.perguntando);
             this.updatePending = false;
+            // TODO: distancemeter %100 >> i open question
+            //document.ADDelements.createElement("div", this);
+            if(this.distanceRan >= 4000*this.questionsN)
+            {
+                this.questionsN++;
+                // Get the modal
+            var modal = document.getElementById("myModal");
 
+            this.stop();
+            this.perguntando = true;
+            modal.style.display = "block";
+            // await this.waitingKeypress();
+            // await new Promise(r => setTimeout(r, 1000));
+            await this.waitingKeypress();
+            modal.style.display = "none";
+            this.nextLevel();
+            // this.play()
+                // window.confirm("test");
+                // var element = document.getElementById('pergunta');
+                // console.log(element);
+                // element.appendChild(this.criarPergunta());
+            }
             var now = getTimeStamp();
             var deltaTime = now - (this.time || now);
             this.time = now;
@@ -671,45 +746,48 @@
          * Process keydown.
          * @param {Event} e
          */
-        onKeyDown: function (e) {
-            // Prevent native page scrolling whilst tapping on mobile.
-            if (IS_MOBILE && this.playing) {
-                e.preventDefault();
-            }
-
-            if (e.target != this.detailsButton) {
-                if (!this.crashed && (Runner.keycodes.JUMP[e.keyCode] ||
-                    e.type == Runner.events.TOUCHSTART)) {
-                    if (!this.playing) {
-                        this.loadSounds();
-                        this.playing = true;
-                        this.update();
-                        if (window.errorPageController) {
-                            errorPageController.trackEasterEgg();
+        onKeyDown: async function (e) {
+            if(!this.perguntando){
+                // Prevent native page scrolling whilst tapping on mobile.
+                if (IS_MOBILE && this.playing) {
+                    e.preventDefault();
+                }
+    
+                if (e.target != this.detailsButton) {
+                    if (!this.crashed && (Runner.keycodes.JUMP[e.keyCode] ||
+                        e.type == Runner.events.TOUCHSTART)) {
+                        if (!this.playing) {
+                            this.loadSounds();
+                            this.playing = true;
+                            await this.update();
+                            if (window.errorPageController) {
+                                errorPageController.trackEasterEgg();
+                            }
+                        }
+                        //  Play sound effect and jump on starting the game for the first time.
+                        if (!this.tRex.jumping && !this.tRex.ducking) {
+                            this.playSound(this.soundFx.BUTTON_PRESS);
+                            this.tRex.startJump(this.currentSpeed);
                         }
                     }
-                    //  Play sound effect and jump on starting the game for the first time.
-                    if (!this.tRex.jumping && !this.tRex.ducking) {
-                        this.playSound(this.soundFx.BUTTON_PRESS);
-                        this.tRex.startJump(this.currentSpeed);
+    
+                    if (this.crashed && e.type == Runner.events.TOUCHSTART &&
+                        e.currentTarget == this.containerEl) {
+                        this.restart();
+                    }
+                }
+    
+                if (this.playing && !this.crashed && Runner.keycodes.DUCK[e.keyCode]) {
+                    e.preventDefault();
+                    if (this.tRex.jumping) {
+                        // Speed drop, activated only when jump key is not pressed.
+                        this.tRex.setSpeedDrop();
+                    } else if (!this.tRex.jumping && !this.tRex.ducking) {
+                        // Duck.
+                        this.tRex.setDuck(true);
                     }
                 }
 
-                if (this.crashed && e.type == Runner.events.TOUCHSTART &&
-                    e.currentTarget == this.containerEl) {
-                    this.restart();
-                }
-            }
-
-            if (this.playing && !this.crashed && Runner.keycodes.DUCK[e.keyCode]) {
-                e.preventDefault();
-                if (this.tRex.jumping) {
-                    // Speed drop, activated only when jump key is not pressed.
-                    this.tRex.setSpeedDrop();
-                } else if (!this.tRex.jumping && !this.tRex.ducking) {
-                    // Duck.
-                    this.tRex.setDuck(true);
-                }
             }
         },
 
@@ -719,17 +797,18 @@
          * @param {Event} e
          */
         onKeyUp: function (e) {
+            console.log(!this.perguntando)
             var keyCode = String(e.keyCode);
             var isjumpKey = Runner.keycodes.JUMP[keyCode] ||
                 e.type == Runner.events.TOUCHEND ||
                 e.type == Runner.events.MOUSEDOWN;
 
-            if (this.isRunning() && isjumpKey) {
+            if (this.isRunning() && isjumpKey && !this.perguntando) {
                 this.tRex.endJump();
-            } else if (Runner.keycodes.DUCK[keyCode]) {
+            } else if (Runner.keycodes.DUCK[keyCode] && !this.perguntando) {
                 this.tRex.speedDrop = false;
                 this.tRex.setDuck(false);
-            } else if (this.crashed) {
+            } else if (this.crashed && !this.perguntando) {
                 // Check that enough time has elapsed before allowing jump key to restart.
                 var deltaTime = getTimeStamp() - this.time;
 
@@ -738,11 +817,13 @@
                         Runner.keycodes.JUMP[keyCode])) {
                     this.restart();
                 }
-            } else if (this.paused && isjumpKey) {
+            } else if (this.paused && isjumpKey && !this.perguntando) {
                 // Reset the jump state
                 this.tRex.reset();
                 this.play();
             }
+            
+            
         },
 
         /**
@@ -813,18 +894,33 @@
             this.raqId = 0;
         },
 
-        play: function () {
+        pause: function () {
+            this.playing = false;
+            this.paused = true;
+
+        },
+
+        resume: function () {
+
+            this.playing = true;
+            this.paused = false;
+            // cancelAnimationFrame(this.raqId);
+            // this.raqId = 0;
+        },
+
+        play: async function () {
             if (!this.crashed) {
                 this.playing = true;
                 this.paused = false;
                 this.tRex.update(0, Trex.status.RUNNING);
                 this.time = getTimeStamp();
-                this.update();
+                await this.update();
             }
         },
 
-        restart: function () {
+        restart: async function () {
             if (!this.raqId) {
+                this.questionsN = 1;
                 this.playCount++;
                 this.runningTime = 0;
                 this.playing = true;
@@ -839,7 +935,7 @@
                 this.tRex.reset();
                 this.playSound(this.soundFx.BUTTON_PRESS);
                 this.invert(true);
-                this.update();
+                await this.update();
             }
         },
         
@@ -855,6 +951,7 @@
          * Sets the scaling for arcade mode.
          */
         setArcadeModeContainerScale() {
+            var element = document.getElementById('main-frame-error');
             const windowHeight = window.innerHeight;
             const scaleHeight = windowHeight / this.dimensions.HEIGHT;
             const scaleWidth = window.innerWidth / this.dimensions.WIDTH;
