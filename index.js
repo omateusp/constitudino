@@ -545,7 +545,7 @@
               document.addEventListener('keydown', onKeyHandler);
               function onKeyHandler(e) {
                 console.log(e.keyCode)
-                if (e.keyCode === 86 || e.keyCode === 70) {
+                if (e.keyCode === 86 ){//|| e.keyCode === 70) {
                     // if(true){
                   document.removeEventListener('keydown', onKeyHandler);
                   resolve();
