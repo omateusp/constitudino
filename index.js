@@ -1,3 +1,14 @@
+function loadFile(filePath) {
+    var result = null;
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", filePath, false);
+    xmlhttp.send();
+    if (xmlhttp.status==200) {
+      result = xmlhttp.responseText;
+    }
+    return result;
+  }
+
 // Copyright (c) 2014 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -45,6 +56,7 @@
         this.currentSpeed = this.config.SPEED;
 
         this.obstacles = [];
+        this.perguntasFeitas = [];
 
         this.activated = false; // Whether the easter egg has been activated.
         this.playing = false; // Whether the game is currently in play state.
@@ -529,6 +541,13 @@
                 this.dimensions.HEIGHT);
         },
 
+        escurecerCanvas: function(){
+            this.canvasCtx.globalAlpha = 0.5;
+            // this.canvasCtx.fillStyle = 'rgb(255, 221, 0)';
+            // this.canvasCtx.fillRect(0, 0, this.dimensions.WIDTH,
+            //     this.dimensions.HEIGHT);
+        },
+
         criarPergunta: function() {
             var pergunta = document.createElement('div')
             //we new a class name to use GitHub default Css style
@@ -582,7 +601,9 @@
          * Update the game frame and schedules the next one.
          */
         update: async function () {
-            console.log(this.perguntando);
+            var text = loadFile("./perguntas.txt");
+            var textByLine = text.split("\n")
+            console.log(textByLine.length);
             this.updatePending = false;
             // TODO: distancemeter %100 >> i open question
             //document.ADDelements.createElement("div", this);
@@ -594,9 +615,12 @@
 
             this.stop();
             this.perguntando = true;
+            // this.horizon.reset();
+            this.escurecerCanvas();
             modal.style.display = "block";
             // await this.waitingKeypress();
             // await new Promise(r => setTimeout(r, 1000));
+            
             await this.waitingKeypress();
             modal.style.display = "none";
             this.nextLevel();
@@ -926,6 +950,7 @@
                 this.playing = true;
                 this.crashed = false;
                 this.distanceRan = 0;
+                this.perguntasFeitas = [];
                 this.setSpeed(this.config.SPEED);
                 this.time = getTimeStamp();
                 this.containerEl.classList.remove(Runner.classes.CRASHED);
