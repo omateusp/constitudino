@@ -524,6 +524,7 @@ function loadFile(filePath) {
             this.playCount++;
             this.questionsN = 1;
             this.perguntando = false;
+            this.criarPergunta();
 
             // Handle tabbing off the page. Pause the current game.
             document.addEventListener(Runner.events.VISIBILITY,
@@ -542,39 +543,13 @@ function loadFile(filePath) {
         },
 
         escurecerCanvas: function(){
-            this.canvasCtx.globalAlpha = 0.5;
+            this.canvasCtx.globalAlpha = 0.1;
             // this.canvasCtx.fillStyle = 'rgb(255, 221, 0)';
             // this.canvasCtx.fillRect(0, 0, this.dimensions.WIDTH,
             //     this.dimensions.HEIGHT);
         },
 
-        criarPergunta: function() {
-            var pergunta = document.createElement('div')
-            //we new a class name to use GitHub default Css style
-            pergunta.className = 'pergunta'
-        
-            pergunta.innerHTML =  `
-            <h1 style="text-align: center;font-family: 'Open Sans', sans-serif;">A Constituição de 1824 foi a primeira constituição do Brasil?</h1>
-                `
-        
-            return pergunta
-        },
-        waitingKeypress: function () {
-            return new Promise((resolve) => {
-              document.addEventListener('keydown', onKeyHandler);
-              function onKeyHandler(e) {
-                console.log(e.keyCode)
-                if (e.keyCode === 86 ){//|| e.keyCode === 70) {
-                    // if(true){
-                  document.removeEventListener('keydown', onKeyHandler);
-                  resolve();
-                  this.nextLevel();
-                }
-              }
-            });
-        },
-
-        nextLevel: async function(){
+        nextLevel: async function (){
             if (!this.raqId) {
                 // this.questionsN = 1;
                 // this.playCount++;
@@ -596,14 +571,60 @@ function loadFile(filePath) {
             }
         },
 
+        randomNumber: function(max){
+            var number = Math.floor(Math.random()*max);
+            // var number = 7;
+            while (this.perguntasFeitas.includes(number)){
+                console.log("já tem esse número {number}");
+                number = Math.floor(Math.random()*max);
+            }
+            this.perguntasFeitas.push(number)
+            return number;
+        },
+
+        criarPergunta: function() {
+            var text = loadFile("./perguntas.txt");
+            var textByLine = text.split("\n")
+            // var pergunta = document.createElement('div')
+            // //we new a class name to use GitHub default Css style
+            // pergunta.className = 'pergunta'
+            var number = this.randomNumber(8);
+            console.log(number)
+            console.log(textByLine[number])
+            var pergunta = textByLine[number];
+            console.log(pergunta);
+            var element = document.getElementById("texto-pergunta");
+            element.innerText = pergunta;
+            // document.updateElement(pergunta)
+        
+            // pergunta.innerHTML =  `
+            // <h1 style="text-align: center;font-family: 'Open Sans', sans-serif;">A Constituição de 1824 foi a primeira constituição do Brasil?</h1>
+            //     `
+        
+            // return pergunta
+        },
+        waitingKeypress: async function () {
+            return new Promise((resolve) => {
+              document.addEventListener('keydown', onKeyHandler);
+              var outro = this;
+              async function onKeyHandler(e) {
+                // console.log(e.keyCode)
+                if (e.keyCode === 86 ){//|| e.keyCode === 70) {
+                    // if(true){
+                  document.removeEventListener('keydown', onKeyHandler);
+                  resolve();
+                  await outro.nextLevel();
+                }
+              }
+            });
+        },
+
 
         /**
          * Update the game frame and schedules the next one.
          */
         update: async function () {
-            var text = loadFile("./perguntas.txt");
-            var textByLine = text.split("\n")
-            console.log(textByLine.length);
+            
             this.updatePending = false;
             // TODO: distancemeter %100 >> i open question
             //document.ADDelements.createElement("div", this);
@@ -612,18 +633,20 @@ function loadFile(filePath) {
                 this.questionsN++;
                 // Get the modal
             var modal = document.getElementById("myModal");
+            // this.escurecerCanvas();
 
             this.stop();
             this.perguntando = true;
             // this.horizon.reset();
-            this.escurecerCanvas();
             modal.style.display = "block";
             // await this.waitingKeypress();
             // await new Promise(r => setTimeout(r, 1000));
             
             await this.waitingKeypress();
             modal.style.display = "none";
-            this.nextLevel();
+
+            this.criarPergunta();
+            // this.nextLevel();
             // this.play()
                 // window.confirm("test");
                 // var element = document.getElementById('pergunta');
@@ -821,7 +844,7 @@ function loadFile(filePath) {
          * @param {Event} e
          */
         onKeyUp: function (e) {
-            console.log(!this.perguntando)
+            // console.log(!this.perguntando)
             var keyCode = String(e.keyCode);
             var isjumpKey = Runner.keycodes.JUMP[keyCode] ||
                 e.type == Runner.events.TOUCHEND ||
