@@ -57,6 +57,8 @@ function loadFile(filePath) {
 
         this.obstacles = [];
         this.perguntasFeitas = [];
+        this.perguntas = [];
+        this.pergunta = [];
 
         this.activated = false; // Whether the easter egg has been activated.
         this.playing = false; // Whether the game is currently in play state.
@@ -524,7 +526,10 @@ function loadFile(filePath) {
             this.playCount++;
             this.questionsN = 1;
             this.perguntando = false;
-            this.criarPergunta();
+
+            var text = loadFile("./perguntas.txt");
+            this.perguntas = [...text.split("\n")]
+            // this.criarPergunta();
 
             // Handle tabbing off the page. Pause the current game.
             document.addEventListener(Runner.events.VISIBILITY,
@@ -575,48 +580,53 @@ function loadFile(filePath) {
             var number = Math.floor(Math.random()*max);
             // var number = 7;
             while (this.perguntasFeitas.includes(number)){
-                console.log("já tem esse número {number}");
                 number = Math.floor(Math.random()*max);
             }
             this.perguntasFeitas.push(number)
             return number;
         },
 
-        criarPergunta: function() {
-            var text = loadFile("./perguntas.txt");
-            var textByLine = text.split("\n")
-            // var pergunta = document.createElement('div')
-            // //we new a class name to use GitHub default Css style
-            // pergunta.className = 'pergunta'
-            var number = this.randomNumber(8);
-            console.log(number)
-            console.log(textByLine[number])
-            var pergunta = textByLine[number];
-            console.log(pergunta);
+        fazerPergunta: async function() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "block";
+            if (this.perguntasFeitas.lenght == this.perguntas.length){
+                this.perguntasFeitas = [];
+            }
+            var number = this.randomNumber(this.perguntas.length);
+            this.pergunta = this.perguntas[number].split(";");
+            console.log(this.pergunta);
             var element = document.getElementById("texto-pergunta");
-            element.innerText = pergunta;
-            // document.updateElement(pergunta)
-        
-            // pergunta.innerHTML =  `
-            // <h1 style="text-align: center;font-family: 'Open Sans', sans-serif;">A Constituição de 1824 foi a primeira constituição do Brasil?</h1>
-            //     `
-        
-            // return pergunta
+            element.innerText = this.pergunta[2];
+            // await this.waitingKeypress();
+            // await new Promise(r => setTimeout(r, 1000));
+            
+            await this.waitingKeypress();
+            modal.style.display = "none";
+            this.perguntando = false;
         },
+
         waitingKeypress: async function () {
             return new Promise((resolve) => {
-              document.addEventListener('keydown', onKeyHandler);
+              document.addEventListener('keydown', onKeyHandler); 
               var outro = this;
+              console.log(outro.pergunta[1])
               async function onKeyHandler(e) {
-                // console.log(e.keyCode)
-                if (e.keyCode === 86 ){//|| e.keyCode === 70) {
+                if ((e.keyCode === 86 && outro.pergunta[1] === "true") || 
+                    (e.keyCode === 70 && outro.pergunta[1] === "false")) {
                     // if(true){
-                  document.removeEventListener('keydown', onKeyHandler);
-                  resolve();
                   await outro.nextLevel();
+                } else {
+                    var modal = document.getElementById("myModal");
+                    modal.style.display = "none";
+                    outro.perguntando = false;
+                    outro.gameOver();
                 }
+                document.removeEventListener('keydown', onKeyHandler);
+                resolve();
               }
             });
+
+
         },
 
 
@@ -628,29 +638,28 @@ function loadFile(filePath) {
             this.updatePending = false;
             // TODO: distancemeter %100 >> i open question
             //document.ADDelements.createElement("div", this);
-            if(this.distanceRan >= 4000*this.questionsN)
+            if(this.distanceRan >= 1000*this.questionsN)
             {
                 this.questionsN++;
                 // Get the modal
-            var modal = document.getElementById("myModal");
+            // var modal = document.getElementById("myModal");
             // this.escurecerCanvas();
 
             this.stop();
             this.perguntando = true;
             // this.horizon.reset();
-            modal.style.display = "block";
-            // await this.waitingKeypress();
-            // await new Promise(r => setTimeout(r, 1000));
+            // modal.style.display = "block";
+            // // await this.waitingKeypress();
+            // // await new Promise(r => setTimeout(r, 1000));
             
-            await this.waitingKeypress();
-            modal.style.display = "none";
+            // await this.waitingKeypress();
+            // modal.style.display = "none";
 
-            this.criarPergunta();
+            await this.fazerPergunta();
             // this.nextLevel();
             // this.play()
                 // window.confirm("test");
                 // var element = document.getElementById('pergunta');
-                // console.log(element);
                 // element.appendChild(this.criarPergunta());
             }
             var now = getTimeStamp();
@@ -844,7 +853,6 @@ function loadFile(filePath) {
          * @param {Event} e
          */
         onKeyUp: function (e) {
-            // console.log(!this.perguntando)
             var keyCode = String(e.keyCode);
             var isjumpKey = Runner.keycodes.JUMP[keyCode] ||
                 e.type == Runner.events.TOUCHEND ||
@@ -967,6 +975,7 @@ function loadFile(filePath) {
 
         restart: async function () {
             if (!this.raqId) {
+                this.perguntando = false;
                 this.questionsN = 1;
                 this.playCount++;
                 this.runningTime = 0;
