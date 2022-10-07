@@ -1,8 +1,53 @@
-1;true;A Constituição de 1824 foi a primeira constituição do Brasil.
-1;false;A Constituição de 1824 foi promulgada.
-1;false;A Constituição de 1824 estabelecia quatro poderes: Executivo, Legislativo, Judiciário e Imperial.
-1;true;De acordo com a Constituição de 1824, o Brasil seria uma monarquia constitucional e hereditária.
-1;false;A Constituição de 1824 definia que o Brasil seria dividido em estados.
-1;false;Segundo a Constituição de 1924, o imperador estava submetido à autoridade da Igreja Católica.
+2;true;A Constituição de 1824 foi a primeira constituição do Brasil.
+4;false;A Constituição de 1824 foi promulgada.
+3;false;A Constituição de 1824 estabelecia quatro poderes: Executivo, Legislativo, Judiciário e Imperial.
+4;true;De acordo com a Constituição de 1824, o Brasil seria uma monarquia constitucional e hereditária.
+2;false;A Constituição de 1824 definia que o Brasil seria dividido em estados.
+4;false;Segundo a Constituição de 1924, o imperador estava submetido à autoridade da Igreja Católica.
 1;true;A Constituição de 1824 estabelecia que as eleições seriam indiretas e que o direito ao voto era censitário.
 1;false;A escravidão foi abolida com a Constituição de 1824.
+2;true;A Constituição de 1891 recebeu o nome de “Constituição da República dos Estados Unidos do Brasil’’.
+3;true;A Constituição de 1891, inspirada na Constituição norte-americana, assegurou maior autonomia para os estados.
+4;false;A Constituição de 1891 estabeleceu o catolicismo como religião oficial do Estado brasileiro.
+1;false;Segundo a Constituição de 1891, o Brasil continuaria a ser governado por um imperador.
+1;true;A partir da Constituição de 1891, ratificou-se a mudança na forma de governo como república.
+4;false;A Constituição de 1891 estabelecia o voto secreto.
+5;false;Com a Constituição de 1891, instaurou-se o voto universal, ou seja, não excluiu nenhum grupo social.
+2;false;A Constituição Brasileira de 1934 foi outorgada pela Assembleia Nacional Constituinte no dia 16 de julho do mesmo ano.
+5;true;A Constituição Brasileira de 1934 garantia maiores poderes ao executivo, consequentemente à figura presidencial.
+1;true;A Constituição Brasileira de 1934 garantiu a pluralidade sindical.
+3;true;A educação da população brasileira foi favorecida pela Constituição Brasileira de 1934.
+5;false;As mudanças eleitorais determinadas pela Constituição Brasileira de 1934 incluem o voto obrigatório e secreto para homens e mulheres a partir dos 18 anos.
+3;true;A partir da Constituição Brasileira de 1934 a diferença salarial entre pessoas de gêneros distintos exercendo as mesmas funções se tornou crime.
+4;false;A Constituição Brasileira de 1934 é conhecida por promover os direitos trabalhistas de uma forma não abrangente, uma vez que se aplica somente aos trabalhos em áreas urbanas.
+2;true;A Constituição Brasileira de 1937 foi outorgada no dia 10 de novembro do mesmo ano.
+1;true;A constituição Brasileira de 1937 ficou conhecida como Polaca.
+3;false;A Constituição Brasileira de 1937 foi influenciada pelo caráter federalista estadunidense.
+4;false;A Constituição Brasileira de 1937 manteve os direitos dos trabalhadores, como por exemplo o direito de greve.
+3;true;A Constituição Brasileira de 1937 centralizava fortemente o poder estatal nas mãos do presidente.
+4;false;Durante a vigência da Constituição Brasileira de 1937 os partidos e a imprensa possuiam uma considerável liberdade de expressão.
+5;false;Assim como nos regimes totalitários, a Constituição de 1937 tinha viés humanitário e portanto não oferecia punições para os opositores ideológicos do regime vigente no país.
+4;true;O grupo social que continuou impedido de votar segundo a Constituição de 1946 foram os analfabetos, porém mulheres e negros eram permitidos votar.
+3;true;De acordo com a Constituição de 1946, o direito à greve foi concedido, mas era limitado.
+1;false;Mesmo garantindo autonomia política para os estados, a Constituição de 1946 não concedeu direitos individuais como a liberdade de imprensa e opinião.
+4;true;A Constituição de 1946 não incorporava os trabalhadores rurais aos direitos trabalhistas.
+1;false;De acordo com a Constituição de 1946, o voto era aberto, sendo um grande mecanismo utilizado pelos cafeicultores.
+1;true;A Constituição de 1946 definiu o mandato de cinco anos, sem direito à reeleição.
+3;false;De acordo com a Constituição de 1946 não foi permitida nenhuma intervenção dos militares na política brasileira.
+1;false;A Constituição de 1967, mesmo no período de ditadura militar, não incorporou a redução da autonomia individual e a suspensão dos direitos constitucionais por parte do Estado.
+3;true;Segundo a Constituição de 1967 qualquer crime que ameaçasse a segurança nacional a punição era a pena de morte.
+3;true;A Constituição de 1967 visava o aumento dos poderes da União e do presidente da República.
+1;false;Brasília deixou de ser a capital federal a partir da Constituição de 1967 e passou a ser o Rio de Janeiro, onde começou a insatisfação das tropas militares para depor o governo constitucional de João Goulart.
+1;true;A partir da Constituição de 1967, pode-se concluir que ocorreu a suspensão de direitos civis e políticos dos cidadãos.
+2;false;O ato institucional marcou a fase menos dura do período de ditadura.
+5;true;A Constituição de 1967 fortalecia o Poder Executivo e a figura dos presidentes militares, devido ao  teor autoritário, restringindo os outros poderes da República, sobretudo o Legislativo.
+1;true;A Constituição de 1988 é chamada de “Constituição Cidadã”.
+4;false;Dentre os direitos previstos pela Constituição de 1988 estão os Atos Institucionais, com destaque para o AI 5, que proibia a tortura.
+2;false;A Constituição de 1988 prevê o voto direto, mas nem todos podem votar, como os analfabetos.
+2;true;A Constituição de 1988 coloca como dever do Estado a proteção ambiental e garante aos povos indígenas o direito de demarcação de suas terras. 
+5;false;Dois artigos se destacam na Constituição de 1988: o Artigo 5º, que abrange os direitos sociais, e o Artigo 6º, que abrange os direitos civis.
+2;true;A Constituição de 1988 está em consenso com a Declaração Universal dos Direitos Humanos da ONU, logo garante direitos e liberdades básicas aos cidadãos.
+3;false;A Constituição de 1988 foi elaborada por um pequeno grupo de políticos e, dessa maneira, foi outorgada.
+4;false;A Constituição de 1988 afirma que o Estado brasileiro é ateu, o que garante o direito da manifestação de qualquer religião.
+1;true;O Artigo 5º da Constituição de 1988 afirma que o racismo é um crime inafiançável e imprescritível.
+3;true;Estão previstas por lei possíveis alterações no texto da Constituição de 1988, por meio de emendas constitucionais.

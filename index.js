@@ -587,6 +587,7 @@ function loadFile(filePath) {
         },
 
         fazerPergunta: async function() {
+            this.stopListening();
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
             if (this.perguntasFeitas.lenght == this.perguntas.length){
@@ -594,7 +595,8 @@ function loadFile(filePath) {
             }
             var number = this.randomNumber(this.perguntas.length);
             this.pergunta = this.perguntas[number].split(";");
-            console.log(this.pergunta);
+            // console.log(number)
+            // console.log(this.pergunta);
             var element = document.getElementById("texto-pergunta");
             element.innerText = this.pergunta[2];
             // await this.waitingKeypress();
@@ -603,18 +605,22 @@ function loadFile(filePath) {
             await this.waitingKeypress();
             modal.style.display = "none";
             this.perguntando = false;
+            this.startListening();
         },
 
         waitingKeypress: async function () {
             return new Promise((resolve) => {
               document.addEventListener('keydown', onKeyHandler); 
               var outro = this;
-              console.log(outro.pergunta[1])
+            //   console.log(outro.pergunta[1])
               async function onKeyHandler(e) {
                 if ((e.keyCode === 86 && outro.pergunta[1] === "true") || 
                     (e.keyCode === 70 && outro.pergunta[1] === "false")) {
                     // if(true){
+                    
                   await outro.nextLevel();
+                } else if(e.keyCode != 86 && e.keyCode != 70) {
+                    throw "Tecla inválida, utilize v ou f"
                 } else {
                     var modal = document.getElementById("myModal");
                     modal.style.display = "none";
@@ -638,7 +644,7 @@ function loadFile(filePath) {
             this.updatePending = false;
             // TODO: distancemeter %100 >> i open question
             //document.ADDelements.createElement("div", this);
-            if(this.distanceRan >= 4000*this.questionsN)
+            if(this.distanceRan >= 6000*this.questionsN)
             {
                 this.questionsN++;
                 // Get the modal
@@ -765,6 +771,7 @@ function loadFile(filePath) {
          * Bind relevant key / mouse / touch listeners.
          */
         startListening: function () {
+            // console.log("começou a ouvir")
             // Keys.
             document.addEventListener(Runner.events.KEYDOWN, this);
             document.addEventListener(Runner.events.KEYUP, this);
@@ -785,6 +792,7 @@ function loadFile(filePath) {
          * Remove all listeners.
          */
         stopListening: function () {
+            // console.log("Parou de ouvir")
             document.removeEventListener(Runner.events.KEYDOWN, this);
             document.removeEventListener(Runner.events.KEYUP, this);
 
@@ -853,6 +861,7 @@ function loadFile(filePath) {
          * @param {Event} e
          */
         onKeyUp: function (e) {
+            // console.log(this.perguntando)
             var keyCode = String(e.keyCode);
             var isjumpKey = Runner.keycodes.JUMP[keyCode] ||
                 e.type == Runner.events.TOUCHEND ||
@@ -1030,6 +1039,10 @@ function loadFile(filePath) {
          * Pause the game if the tab is not in focus.
          */
         onVisibilityChange: function (e) {
+            // console.log(this.perguntando)
+            if(this.perguntando){
+                throw "Pergunta em andamento"
+            }
             if (document.hidden || document.webkitHidden || e.type == 'blur' ||
                 document.visibilityState != 'visible') {
                 this.stop();
