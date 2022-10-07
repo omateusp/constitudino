@@ -587,7 +587,6 @@ function loadFile(filePath) {
         },
 
         fazerPergunta: async function() {
-            this.stopListening();
             var modal = document.getElementById("myModal");
             modal.style.display = "block";
             if (this.perguntasFeitas.lenght == this.perguntas.length){
@@ -605,7 +604,6 @@ function loadFile(filePath) {
             await this.waitingKeypress();
             modal.style.display = "none";
             this.perguntando = false;
-            this.startListening();
         },
 
         waitingKeypress: async function () {
